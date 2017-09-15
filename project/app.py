@@ -2,6 +2,8 @@ import json
 from flask import (Flask, render_template, redirect, 
                     url_for, request, make_response)
 
+from options import DEFAULTS
+
 # In Flask cookies are set on response, which is different
 # from other frameworks and languages. That's why we import
 # make_response
@@ -22,9 +24,16 @@ def index():
     data = get_saved_data() # get cookie information
     return render_template('index.html', saves=data) # pass data from cookie to template
 
+# character builder
+@app.route('/builder')
+def builder():
+    return render_template('builder.html',
+                            saves=get_saved_data(),
+                            options=DEFAULTS)
+
 @app.route('/save', methods=['POST'])
 def save():
-    response = make_response(redirect(url_for('index')))  
+    response = make_response(redirect(url_for('builder')))  
     data = get_saved_data()
     data.update(dict(request.form.items()))  
     # we call the cookie 'character' and turn value into dict 
